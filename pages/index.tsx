@@ -6,6 +6,7 @@ import FrostiesABI from '../abi/frosties.json';
 import WrappedFrostiesABI from '../abi/wrapped.json';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Image from 'next/image';
 
 const frostiesMainnetAddress = '0x3c99f2a4b366d46bcf2277639a135a6d1288eceb';
 const wrappedMainnetAddress = '0x4c864f944e6d819f7bad23d2e92333182cb69ea4';
@@ -103,7 +104,10 @@ export default function App() {
         </nav>
       </div>
       <div className="w-96 m-auto">
-        <div className="mt-24 ">
+        <div className="w-56 m-auto mt-12">
+          <Image src="/images/Icon.gif" height={250} width={250} />
+        </div>
+        <div className="mt-12">
           <button
             onClick={wrapAll}
             className="shadow-md m-auto flex justify-center w-44 py-2 mb-4 border text-white bg-blue-600  border-blue-700 rounded-lg cursor-pointer hover:bg-blue-500"
