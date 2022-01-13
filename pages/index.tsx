@@ -37,15 +37,18 @@ export default function App() {
 
   useEffect(() => {
     async function fetchMetadata() {
+      console.log('account:', account);
       if (account && oldContract) {
         const IFrosties = new ethers.utils.Interface(FrostiesABI);
         const frostiesContract = new ethers.Contract(oldContract, IFrosties, library);
 
         const IDs = await frostiesContract.walletOfOwner(account);
+        console.log('Frostie IDs', IDs);
 
         const meta = [];
         for (let id of IDs) {
           const uri: string = await frostiesContract.tokenURI(id);
+          console.log(`Metadata URI for ${id}: ${uri}`);
 
           const ipfsURL = 'https://ipfs.io/ipfs/' + uri.split('://')[1];
           const resp = await axios(ipfsURL);
@@ -57,7 +60,7 @@ export default function App() {
       }
     }
     void fetchMetadata();
-  }, [account]);
+  }, [account, oldContract]);
 
   return (
     <div>
@@ -90,8 +93,8 @@ export default function App() {
         Your Unwrapped Frosties
       </div>
       <div className="flex flex-wrap border p-8 mx-8 lg:mx-44 xl:mx-80 rounded-lg shadow-md">
-        {metadata.map((m) => (
-          <img className="w-48 shadow-md m-4" src={m.image} />
+        {metadata.map((m, i) => (
+          <img key={i} className="w-48 shadow-md m-4" src={m.image} />
         ))}
       </div>
     </div>

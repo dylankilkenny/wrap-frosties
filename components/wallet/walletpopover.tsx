@@ -31,7 +31,6 @@ interface LinkProps {
 }
 
 function ExternalLink({ href, children }: LinkProps): JSX.Element {
-  console.log('href', href);
   return (
     <a href={href} target="_blank" className="text-blue-500 hover:text-blue-400 w-full" rel="noreferrer">
       {children}
