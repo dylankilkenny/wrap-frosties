@@ -40,14 +40,6 @@ export default function App() {
     setNewContract(chainId === 1 ? wrappedMainnetAddress : wrappedRinkebyAddress);
   }, [chainId]);
 
-  // useEffect(() => {
-  //   if (account && newContract) {
-  //     const IWrappedFrosties = new ethers.utils.Interface(WrappedFrostiesABI);
-  //     const frostiesWrappedContract = new ethers.Contract(newContract, IWrappedFrosties, library?.getSigner());
-  //     const approved = await frostiesWrappedContract.
-  //   }
-  // }, [account, newContract]);
-
   useEffect(() => {
     async function fetchMetadata() {
       try {
@@ -111,20 +103,13 @@ export default function App() {
         </nav>
       </div>
       <div className="w-96 m-auto">
-        <div className="grid grid-cols-2 mt-24">
-          <div className="col-span-1">
-            <button
-              onClick={wrapAll}
-              className="shadow-md flex justify-center w-44 py-2 mb-4 border text-white bg-blue-600  border-blue-700 rounded-lg cursor-pointer hover:bg-blue-500"
-            >
-              {approved ? <span>Wrap All Frosties</span> : <span>Approve Wrapper</span>}
-            </button>
-          </div>
-          <div className="col-span-1">
-            <button className="float-right flex justify-center w-44 py-2 mb-4 border text-gray-500 bg-white border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100">
-              <span>Unwrap All Frosties</span>
-            </button>
-          </div>
+        <div className="mt-24 ">
+          <button
+            onClick={wrapAll}
+            className="shadow-md m-auto flex justify-center w-44 py-2 mb-4 border text-white bg-blue-600  border-blue-700 rounded-lg cursor-pointer hover:bg-blue-500"
+          >
+            {approved ? <span>Wrap All Frosties</span> : <span>Approve Wrapper</span>}
+          </button>
         </div>
       </div>
       <div className="grid justify-center text-3xl font-normal leading-normal mt-0 mb-2 text-gray-800">
