@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const frostiesMainnetAddress = '0x3c99f2a4b366d46bcf2277639a135a6d1288eceb';
-const wrappedMainnetAddress = '0xe905fccfb6fd93cc81cd5e2f544078bd2cfcc316';
+const wrappedMainnetAddress = '0x4c864f944e6d819f7bad23d2e92333182cb69ea4';
 
 const frostiesRinkebyAddress = '0xefe602390551b41ad24d28b2b4161023adb45803';
 const wrappedRinkebyAddress = '0xe905fccfb6fd93cc81cd5e2f544078bd2cfcc316';
