@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.wallet .Popover-body {
+  display: inline-flex;
+  padding: 1rem 1rem;
+  width: 400px;
+  background: white;
+  border-radius: 0.3rem;
+}
+
+.Popover-tipShape {
+  fill: #f3f4f6;
+  display: none;
+}
+
+.wallet .Popover-tip {
+  display: none;
+}
+
+.dropdown:hover > .dropdown-content {
+  display: block;
+}
