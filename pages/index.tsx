@@ -124,6 +124,12 @@ export default function App() {
           <img key={i} className="w-48 shadow-md m-4" src={m.image} />
         ))}
       </div>
+      <div className="p-12 text-lg">
+        Built by{' '}
+        <a className="underline text-blue-500" href="https://twitter.com/dylkil" target="_blank">
+          @dylkil
+        </a>
+      </div>
     </div>
   );
 }
