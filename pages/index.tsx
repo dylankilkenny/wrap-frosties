@@ -30,7 +30,7 @@ export default function App() {
   const [metadata, setMetadata] = useState<Metadata[]>([]);
   const [oldContract, setOldContract] = useState<string>();
   const [newContract, setNewContract] = useState<string>();
-  const [tokenIDs, setTokenIDs] = useState<number[]>();
+  const [tokenIDs, setTokenIDs] = useState<number[]>([]);
   const [approved, setApproved] = useState<boolean>(false);
   const { account, chainId, library } = useEthers();
 
@@ -79,15 +79,33 @@ export default function App() {
     void fetchMetadata();
   }, [account, oldContract, newContract]);
 
-  async function wrapAll() {
+  async function approveContract() {
     if (!approved && oldContract && newContract) {
       const IFrosties = new ethers.utils.Interface(FrostiesABI);
       const frostiesContract = new ethers.Contract(oldContract, IFrosties, library?.getSigner());
-      await frostiesContract.setApprovalForAll(newContract, true);
-    } else if (newContract) {
-      const IWrappedFrosties = new ethers.utils.Interface(WrappedFrostiesABI);
-      const frostiesWrappedContract = new ethers.Contract(newContract, IWrappedFrosties, library?.getSigner());
-      await frostiesWrappedContract.wrap(tokenIDs);
+      const approved = await frostiesContract.isApprovedForAll(account, newContract);
+      if (!approved) {
+        await frostiesContract.setApprovalForAll(newContract, true);
+        const approved = await frostiesContract.isApprovedForAll(account, newContract);
+        setApproved(approved);
+      } else {
+        setApproved(true);
+      }
+    }
+  }
+  async function wrapAll() {
+    if (tokenIDs.length > 0) {
+      if (tokenIDs?.length === 1 && oldContract && newContract && account) {
+        const IFrosties = new ethers.utils.Interface(FrostiesABI);
+        const frostiesContract = new ethers.Contract(oldContract, IFrosties, library?.getSigner());
+        await frostiesContract['safeTransferFrom(address,address,uint256)'](account, newContract, tokenIDs[0]);
+      } else {
+        if (newContract) {
+          const IWrappedFrosties = new ethers.utils.Interface(WrappedFrostiesABI);
+          const frostiesWrappedContract = new ethers.Contract(newContract, IWrappedFrosties, library?.getSigner());
+          await frostiesWrappedContract.wrap(tokenIDs);
+        }
+      }
     }
   }
   return (
@@ -108,12 +126,7 @@ export default function App() {
           <Image src="/images/Icon.gif" height={250} width={250} />
         </div>
         <div className="mt-12">
-          <button
-            onClick={wrapAll}
-            className="shadow-md m-auto flex justify-center w-44 py-2 mb-4 border text-white bg-blue-600  border-blue-700 rounded-lg cursor-pointer hover:bg-blue-500"
-          >
-            {approved ? <span>Wrap All Frosties</span> : <span>Approve Wrapper</span>}
-          </button>
+          <ActionButton tokenIDs={tokenIDs} approved={approved} approveContract={approveContract} wrapAll={wrapAll} />
         </div>
       </div>
       <div className="grid justify-center text-3xl font-normal leading-normal mt-0 mb-2 text-gray-800">
@@ -132,4 +145,48 @@ export default function App() {
       </div>
     </div>
   );
+}
+
+interface Props {
+  approved: boolean;
+  tokenIDs: number[];
+  wrapAll: () => void;
+  approveContract: () => void;
+}
+
+function ActionButton({ approved, tokenIDs, wrapAll, approveContract }: Props) {
+  if (tokenIDs.length > 0) {
+    if (tokenIDs.length === 1) {
+      return (
+        <button
+          onClick={wrapAll}
+          className="shadow-md m-auto flex justify-center w-44 py-2 mb-4 border text-white bg-blue-600  border-blue-700 rounded-lg cursor-pointer hover:bg-blue-500"
+        >
+          <span>Wrap All Frosties</span>
+        </button>
+      );
+    } else {
+      if (approved) {
+        return (
+          <button
+            onClick={wrapAll}
+            className="shadow-md m-auto flex justify-center w-44 py-2 mb-4 border text-white bg-blue-600  border-blue-700 rounded-lg cursor-pointer hover:bg-blue-500"
+          >
+            <span>Wrap All Frosties</span>
+          </button>
+        );
+      } else {
+        return (
+          <button
+            onClick={approveContract}
+            className="shadow-md m-auto flex justify-center w-44 py-2 mb-4 border text-white bg-blue-600  border-blue-700 rounded-lg cursor-pointer hover:bg-blue-500"
+          >
+            <span>Approve</span>
+          </button>
+        );
+      }
+    }
+  } else {
+    return <></>;
+  }
 }
